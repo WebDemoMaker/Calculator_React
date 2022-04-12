@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Screen from './components/Screen'
+import Button from './components/Button'
 
 function App() {
+  const [theme , setTheme] = React.useState("#fff")
+
+  React.useEffect(()=>{
+        window.addEventListener("load",function(){
+         let mytheme =  localStorage.getItem("theme")
+         if(mytheme)
+         {
+            setTheme(mytheme)
+            document.documentElement.style.setProperty('--theme', mytheme);
+         }
+        })
+    },[])
+
+  const changeTheme = (name)=>{
+
+      setTheme(name)
+      localStorage.setItem("theme",name)
+      document.documentElement.style.setProperty('--theme', name);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Button theme={theme} handler={changeTheme}/>
+      <Screen theme={theme}/>
+    </>
   );
 }
 
