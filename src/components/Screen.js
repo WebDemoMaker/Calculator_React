@@ -4,10 +4,11 @@ import Operation from './Operation';
 
 
 export default function Screen(props) {
-  
+
 	const [result , setResult] = React.useState(0);
 	const [operands , setOperands] = React.useState([])
   const [showresult , setShowresult] = React.useState(true)
+  const [tempres , setTempRes] = React.useState({})
 
 
 	
@@ -30,13 +31,21 @@ export default function Screen(props) {
       setResult(0)
       setOperands([])
       setShowresult(true)
+      setTempRes({})
   
   }
-
+  var intermediate={}
   const Operations=(num)=>{
     if(num != "cl")
     {
-		  setOperands([...operands , num]) 
+      if(!isNaN(num))
+		    setOperands([...operands , num])
+      else
+      {
+        if(!isNaN(operands.at(-1)))
+        setOperands([...operands , num])
+      }
+
     }
     setShowresult(false)
 		if(num == "=")
@@ -48,6 +57,7 @@ export default function Screen(props) {
       let result=0;
       let flag=false;
       let operator='';
+
       let a = [...operands, num];
       var temp;
       for(let i =0;i<a.length;i++)
@@ -68,6 +78,8 @@ export default function Screen(props) {
                    if(oper1 != 0)
                    {
                      temp = evaluate(+oper0, +oper1 , operator)
+                     let x = `${oper0} ${operator} ${oper1}`
+                     intermediate[x] = temp
                      setResult(temp)
                      oper1=0;
                      oper0=temp;
@@ -79,12 +91,15 @@ export default function Screen(props) {
               else
               {
                  temp = evaluate(+oper0, +oper1 , operator)
+                 let x = `${oper0} ${operator} ${oper1}`
+                 intermediate[x] = temp
                  setResult(temp)
 
               }
            
              
           }
+          setTempRes(intermediate)
       }
     }
     else if(num == "cl")
@@ -93,6 +108,7 @@ export default function Screen(props) {
     }
 	}
     return (
+      <>
       <div className="container">
         <div className="screen">
           <h5>{operands} {showresult ? result : null} </h5>
@@ -119,5 +135,9 @@ export default function Screen(props) {
           <Operation num="/"  dispatch={Operations}/>
         </div>
       </div>
+       <div>
+           <h3 style={{textAlign:"center",color:"grey",letterSpacing:"3px"}}>{tempres && Object.keys(tempres).length > 0 ?  `intermediate results : ${JSON.stringify(tempres)}` : null}</h3>
+       </div>
+       </>
   );
 }
