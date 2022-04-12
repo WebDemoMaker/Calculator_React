@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
-import Screen from './components/Screen'
-import Button from './components/Button'
+import Screen from './components/Screen';
+import Button from './components/Button';
+import Footer from './components/Footer';
+
 
 function App() {
   const [theme , setTheme] = React.useState("#fff")
@@ -27,6 +29,7 @@ function App() {
     <>
       <Button theme={theme} handler={changeTheme}/>
       <Screen theme={theme}/>
+      <Footer/>
     </>
   );
 }
